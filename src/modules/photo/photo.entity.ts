@@ -1,4 +1,3 @@
-import { getProviderByTypeEntityClass } from '@app/transformers/model.transformer'
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
@@ -21,5 +20,3 @@ export class Photo {
   @Column()
   isPublished: boolean
 }
-
-export const PhotoProvider = getProviderByTypeEntityClass(Photo)

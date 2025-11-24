@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common'
-import { DatabaseModule } from '@app/core/databse/database.module'
+import { ConfigModule } from '@nestjs/config'
+import { DBModule } from '@app/core/db/db.module'
 import { PhotoModule } from './modules/photo/photo.module'
 
 @Module({
-  imports: [DatabaseModule, PhotoModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DBModule, PhotoModule],
   controllers: [],
   providers: []
 })

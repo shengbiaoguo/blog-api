@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { Photo } from './photo.entity'
-import { InjectModel } from '@app/transformers/model.transformer'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class PhotoService {
   constructor(
-    @InjectModel(Photo)
+    @InjectRepository(Photo)
     private photoRepository: Repository<Photo>
   ) {}
 
