@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { Photo } from './photo.entity'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -11,6 +11,7 @@ export class PhotoService {
   ) {}
 
   async findAll(): Promise<Photo[]> {
+    // throw new BadRequestException('Password incorrect')
     return this.photoRepository.find()
   }
 }
