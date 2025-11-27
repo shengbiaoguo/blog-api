@@ -34,9 +34,9 @@ export class TransformInterceptor<T> implements NestInterceptor<T, T | HttpSucce
                 data: data.documents,
                 pagination: {
                   total: data.total,
-                  current_page: data.page,
-                  per_page: data.perPage,
-                  total_page: data.totalPage
+                  currentPage: data.page,
+                  perPage: data.perPage,
+                  totalPage: data.totalPage
                 }
               }
         }

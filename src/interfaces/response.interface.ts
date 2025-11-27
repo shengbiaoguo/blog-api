@@ -8,9 +8,9 @@ export interface PaginationPayload<T> {
   data: T
   pagination: {
     total: number
-    current_page: number
-    total_page: number
-    per_page: number
+    currentPage: number
+    totalPage: number
+    perPage: number
   }
 }
 

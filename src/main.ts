@@ -9,10 +9,15 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 async function bootstrap() {
   // const app = await NestFactory.create(AppModule)
   const adapter = new FastifyAdapter({ logger: false, trustProxy: true })
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, { logger: false })
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter)
 
   const configService = app.get(ConfigService)
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true, // 必须开启，让 class-transformer 实例化 DTO 并应用默认值
+      whitelist: true // 推荐：确保请求中未定义的属性不会进入 DTO
+    })
+  )
   app.useGlobalFilters(new HttpExceptionFilter())
   app.useGlobalInterceptors(new TransformInterceptor())
 
