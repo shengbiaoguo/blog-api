@@ -29,7 +29,7 @@ export class ArticleService {
     } as PaginateResult<Article>
   }
 
-  async create(dto: CreateArticleDto) {
+  async create(dto: CreateArticleDto, userId: number) {
     const article = new Article()
     article.title = dto.title
 

@@ -4,12 +4,15 @@ import { User } from './user.entity'
 import { Repository } from 'typeorm'
 import { CreateUserDto } from './dto/create.user.dto'
 import { PaginateResult, PaginationDto } from '@app/interfaces/paginate.interface'
+import { UserItemRO, UserRO } from './interface'
+import { AuthService } from '@app/core/auth/auth.service'
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly authService: AuthService
   ) {}
 
   async getAll(dto: PaginationDto) {
@@ -18,15 +21,17 @@ export class UserService {
     const [data, total] = await this.userRepository.findAndCount({
       skip,
       take: perPage,
-      select: ['id', 'username']
+      select: ['id', 'username', 'createdAt']
     })
+
+    const listData = data.map((i) => ({ id: i.id, username: i.username, createdAt: i.createdAt }) as UserItemRO)
     return {
-      documents: data,
+      documents: listData,
       total: total,
       page,
       perPage,
       totalPage: total && (Math.ceil(total / perPage) || 1)
-    } as PaginateResult<User>
+    } as PaginateResult<UserItemRO>
   }
 
   async create(dto: CreateUserDto) {
@@ -36,9 +41,20 @@ export class UserService {
 
     const existFlag = await this.userRepository.findOneBy({ username: user.username })
     if (existFlag) {
-      throw new BadRequestException('The username already exists.')
+      throw new BadRequestException('The username already exists')
     }
 
-    return await this.userRepository.save(user)
+    const newUser = await this.userRepository.save(user)
+    return this.buildUserRO(newUser)
+  }
+
+  private async buildUserRO(user: User) {
+    const userRO = {
+      id: user.id,
+      username: user.username,
+      token: await this.authService.generateJWT(user)
+    } as UserRO
+
+    return userRO
   }
 }
